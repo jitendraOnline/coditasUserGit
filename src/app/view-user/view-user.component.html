@@ -1,0 +1,53 @@
+<div class="mainContainer">
+   
+   <div class="searchHeader">
+      <div class="search">
+         <mat-form-field>
+            <mat-label>Sort</mat-label>
+            <mat-select (selectionChange)="sortList(a.value)"  #a >
+               <mat-option *ngFor="let sortParam of sortParamList" 
+                           [value]="sortParam">
+                           {{sortParam}}
+               </mat-option>
+            </mat-select>
+         </mat-form-field>
+         <mat-form-field>
+            <input autocomplete="off" 
+                   matInput placeholder="Search" 
+                   (input)="search($event.target.value)" 
+                   id="name" />
+         </mat-form-field>
+      </div>
+      <div *ngIf="isloading">
+         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+   </div>
+
+   <div class="resultContainer">
+      <div *ngIf="showError">
+         <mat-card style="border: 1px solid red">
+               <span style="color: rgb(231, 20, 20) ;margin: 10px;">
+                  <mat-icon>error</mat-icon>
+               </span>
+               <span style="color: red">{{errorMessage}}</span>
+         </mat-card>
+         
+      </div>
+      <div *ngFor="let user of userList?.items;index as i" class="usercard">
+         <app-user-details [userObject]="user"></app-user-details>
+      </div>
+   </div>
+
+   <div class="paginator" *ngIf="showPagination">
+      <div style="transform: translate(0,36px)">
+         Total Results : {{userList?.total_count}}
+      </div>
+      <mat-paginator style="background-color: whitesmoke" 
+                     showFirstLastButtons 
+                     [length]="userList?.total_count"
+                     [pageSize]="30" 
+                     (page)="nextPage($event)">
+      </mat-paginator>
+   </div>
+
+</div>

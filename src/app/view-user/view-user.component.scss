@@ -1,0 +1,38 @@
+.mainContainer{
+    display: grid;
+    grid-template-rows: min-content min-content 1fr ;
+    grid-template-columns: minmax(0%,10%) 1fr minmax(0%,10%);
+    grid-gap:10px;
+    background: whitesmoke;
+    .searchHeader{
+        background: #1a8cff;
+        grid-row:1/1;
+        grid-column: 1/-1;
+        .search{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+            padding: 10px; 
+            }
+    }
+    .resultContainer{
+        grid-row: 3/3;
+        display: flex;
+        flex-direction: column;
+        grid-column: 2/2;
+        align-items: center;
+        justify-content: space-around;
+        margin-bottom: 10px; 
+        .usercard{
+            margin: 10px; 
+            width: 100%;
+        }  
+    }
+
+    .paginator{
+        grid-row: 2/2; 
+        grid-column: 2/2;
+    }
+
+}
