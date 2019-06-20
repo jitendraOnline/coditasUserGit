@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { throwError, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,9 @@ export class UserService {
 
   //method to get all the github users
   searchUsers(search:string,pagenumber:number){
+    if(search==""){
+    return throwError({message:"Nothing to Search, Please type something"});
+    }
     return this.http.get("https://api.github.com/search/users?q="+search+"&page="+pagenumber).pipe(
       catchError(this.handleError)
     );

@@ -11,11 +11,13 @@
                </mat-option>
             </mat-select>
          </mat-form-field>
-         <mat-form-field>
+         <mat-form-field style="width: 50%" appearance="fill">
             <input autocomplete="off" 
+                   autofocus 
                    matInput placeholder="Search" 
                    (input)="search($event.target.value)" 
-                   id="name" />
+                   id="name"
+                    />
          </mat-form-field>
       </div>
       <div *ngIf="isloading">

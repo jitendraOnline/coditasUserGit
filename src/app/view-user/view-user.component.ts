@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../shared-module/service/user.service';
-import { Subject, of } from 'rxjs';
-import { switchMap,distinctUntilChanged, debounceTime } from 'rxjs/operators';
+import { Subject, of, throwError } from 'rxjs';
+import { switchMap,distinctUntilChanged, debounceTime, filter } from 'rxjs/operators';
 import { searchResult } from '../shared-module/models/searchResult';
 
 
@@ -31,18 +31,13 @@ export class ViewUserComponent implements OnInit {
 
   getSearch(){
     this.searchText$.pipe(
-       debounceTime(400),  
-       distinctUntilChanged(),
+       debounceTime(400),
+       distinctUntilChanged((prev, curr) => {
+         if(prev.search == curr.search){this.showPagination=true}
+         return prev.search == curr.search}),
        switchMap((searchedUser) =>{
            this.isloading=true;
-           if(this.seachedValue==searchedUser.search && searchedUser.pagenumber==0){
-             return of(this.userList);
-           }
-           else{
-             this.seachedValue=searchedUser.search;
              return this.userService.searchUsers(searchedUser.search,searchedUser.pagenumber)
-           }
-
        }  
      )
      )
@@ -70,17 +65,11 @@ export class ViewUserComponent implements OnInit {
     this.showError=false;
     this.showPagination=false;
     searchedUser=searchedUser.trim();
-    if(searchedUser!=''){
-      console.log(this.seachedValue+"  "+searchedUser);
+    console.log(this.seachedValue+"  "+searchedUser);
       this.searchText$.next({
         search:searchedUser,
         pagenumber:0,
       });
-    }
-    else{
-        this.showPagination=true;
-        this.userList={ total_count:0,incomplete_results:false,items:[]};
-    }
   }
 
   nextPage(pageEvent){
