@@ -41,9 +41,6 @@
    </div>
 
    <div class="paginator" *ngIf="showPagination">
-      <div style="transform: translate(0,36px)">
-         Total Results : {{userList?.total_count}}
-      </div>
       <mat-paginator style="background-color: whitesmoke" 
                      showFirstLastButtons 
                      [length]="userList?.total_count"

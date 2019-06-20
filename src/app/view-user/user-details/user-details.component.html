@@ -50,12 +50,12 @@
 
       <mat-list>
         <h3 mat-subheader>Repositories</h3>
-        <mat-list-item *ngFor="let repo of userRepo">
+        <mat-list-item *ngFor="let repo of userRepo" >
           <mat-icon *ngIf="!repo.private" mat-list-icon>folder_shared</mat-icon>
           <mat-icon *ngIf="repo.private" mat-list-icon>folder</mat-icon>
-          <h4 mat-line>{{repo.name}}</h4>
+          <h4 mat-line style="max-width: 100px;word-wrap: break-word">{{repo.name}}</h4>
           <p mat-line>last updated : {{repo.updated_at | date}} </p>
-          <div style="display: flex;flex-direction: row">
+          <div style="display: flex;flex-direction: row;flex-wrap:wrap;font-size: 14px ">
             <div *ngIf="repo.language" style="padding: 3px">
               Language: {{repo.language}}
             </div>
@@ -65,12 +65,7 @@
             <div style="padding: 3px">
               Open Issue : {{repo.open_issues_count}}
             </div>
-            <div style="padding: 3px">
-                Followers: {{repo.watchers}}
-              </div>
-            <div style="padding: 3px">
-              star: {{repo.stargazers_count}}
-            </div>
+          
           </div>
           <mat-divider></mat-divider>
         </mat-list-item>
