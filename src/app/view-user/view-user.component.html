@@ -2,7 +2,7 @@
    
    <div class="searchHeader">
       <div class="search">
-         <mat-form-field>
+         <mat-form-field appearance="fill">
             <mat-label>Sort</mat-label>
             <mat-select (selectionChange)="sortList(a.value)"  #a >
                <mat-option *ngFor="let sortParam of sortParamList" 
