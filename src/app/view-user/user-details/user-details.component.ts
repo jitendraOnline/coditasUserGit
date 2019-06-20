@@ -13,6 +13,9 @@ export class UserDetailsComponent implements OnInit {
   constructor(private userService:UserService) { }
   userRepo;
   showRepoFlag:boolean;
+  isloading:boolean=false;
+  showError:boolean=false;
+  errorMessage:string='';
 
   ngOnInit() {
   }
@@ -20,8 +23,15 @@ export class UserDetailsComponent implements OnInit {
   getUserRepo(username){
     this.showRepoFlag=!this.showRepoFlag;
     if(this.userRepo==undefined || this.userRepo==[]){
+      this.isloading=true;
       this.userService.getUserRepo(username).subscribe((repoList)=>{
+        this.isloading=false;
+        this.showError=false;
         this.userRepo=repoList;
+      },(error)=>{
+        this.isloading=false;
+        this.showError=true;
+        this.errorMessage=error;
       })
     }
   }

@@ -11,12 +11,15 @@ export class UserService {
   private repoUrl="https://api.github.com/users/"
   constructor(private http: HttpClient) { }
 
+
+  //method to get all the github users
   searchUsers(search:string,pagenumber:number){
     return this.http.get("https://api.github.com/search/users?q="+search+"&page="+pagenumber).pipe(
       catchError(this.handleError)
     );
   }
 
+  //to to get user repositoy
   getUserRepo(username:string){
     return this.http.get(this.repoUrl+username+"/repos").pipe(
       catchError(this.handleError)
@@ -24,10 +27,7 @@ export class UserService {
 
   }
 
-  getUserDetails(userDetailsUrl:string){
-    return this.http.get(userDetailsUrl);
-  }
-
+//error handler method
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.

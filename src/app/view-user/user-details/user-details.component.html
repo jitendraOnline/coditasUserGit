@@ -20,17 +20,34 @@
   </mat-card-header>
 
   <mat-card-content>
-    <button mat-stroked-button 
-            (click)="getUserRepo(userDetail.login)" 
-            *ngIf="!showRepoFlag">
-             View Detils
-    </button>
-    <button mat-stroked-button
-            (click)="showRepoFlag=(!showRepoFlag)" 
-            *ngIf="showRepoFlag"> 
-            Hide Detils
-    </button>
+    <div style="display: flex;justify-content: flex-end">
+        <button mat-stroked-button 
+        (click)="getUserRepo(userDetail.login)" 
+        *ngIf="!showRepoFlag">
+         View Detils
+        </button>
+        <button mat-stroked-button
+        (click)="showRepoFlag=(!showRepoFlag)" 
+        *ngIf="showRepoFlag"> 
+        Hide Detils
+        </button>
+    </div>
+ 
     <mat-card *ngIf="showRepoFlag">
+
+        <div *ngIf="isloading">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+         </div>
+
+        <div *ngIf="showError">
+            <mat-card style="border: 1px solid red">
+                  <span style="color: rgb(231, 20, 20) ;margin: 10px;">
+                     <mat-icon>error</mat-icon>
+                  </span>
+                  <span style="color: red">{{errorMessage}}</span>
+            </mat-card> 
+         </div>
+
       <mat-list>
         <h3 mat-subheader>Repositories</h3>
         <mat-list-item *ngFor="let repo of userRepo">

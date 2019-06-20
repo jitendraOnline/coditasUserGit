@@ -13,20 +13,58 @@ import { searchResult } from '../shared-module/models/searchResult';
 })
 export class ViewUserComponent implements OnInit {
 
-  constructor(private userService:UserService) { }
-
-  private userList:searchResult;
+  userList:searchResult;
   private searchText$ = new Subject<{search:string,pagenumber:number}>();
   private seachedValue:string;
-  private showPagination:boolean=false;
-  private sortParamList:string[]=  ["Name (A - Z)","Name (Z - A)","Rank ↑","Rank ↓"];
-  private isloading:boolean=false;
-  private showError:boolean=false;
-  private errorMessage:string='';
+  showPagination:boolean=false;
+  sortParamList:string[]=  ["Name (A - Z)","Name (Z - A)","Rank ↑","Rank ↓"];
+  isloading:boolean=false;
+  showError:boolean=false;
+  errorMessage:string='';
+  currentFilter:string='';
+
+  constructor(private userService:UserService) { }
 
   ngOnInit() {
      this.getSearch();
   }
+
+  getSearch(){
+    this.searchText$.pipe(
+       debounceTime(400),  
+       distinctUntilChanged(),
+       switchMap((searchedUser) =>{
+           this.isloading=true;
+           if(this.seachedValue==searchedUser.search && searchedUser.pagenumber==0){
+             return of(this.userList);
+           }
+           else{
+             this.seachedValue=searchedUser.search;
+             return this.userService.searchUsers(searchedUser.search,searchedUser.pagenumber)
+           }
+
+       }  
+     )
+     )
+     .subscribe((serachResult:searchResult)=>{
+       this.userList=serachResult;
+       if(this.currentFilter!=''){
+         this.sortList(this.currentFilter);
+       }
+       this.isloading=false;
+       this.showPagination=true;
+     }
+     ,
+     (error)=>{
+       this.isloading=false;
+       this.errorMessage=error["message"];
+       this.userList={ total_count:0,incomplete_results:false,items:[]},
+       this.showError=true;
+       this.searchText$ = new Subject<{search:string,pagenumber:number}>();
+       this.getSearch();
+     })
+ }
+
 
   search(searchedUser: string) {
     this.showError=false;
@@ -53,41 +91,10 @@ export class ViewUserComponent implements OnInit {
     })
     }
 
-  getSearch(){
-     this.searchText$.pipe(
-        debounceTime(400),  
-        distinctUntilChanged(),
-        switchMap((searchedUser) =>{
-            this.isloading=true;
-            if(this.seachedValue==searchedUser.search && searchedUser.pagenumber==0){
-              return of(this.userList);
-            }
-            else{
-              this.seachedValue=searchedUser.search;
-              return this.userService.searchUsers(searchedUser.search,searchedUser.pagenumber)
-            }
- 
-        }  
-      )
-      )
-      .subscribe((serachResult:searchResult)=>{
-        this.userList=serachResult;
-        this.isloading=false;
-        this.showPagination=true;
-      }
-      ,
-      (error)=>{
-        this.isloading=false;
-        this.errorMessage=error["message"];
-        this.userList={ total_count:0,incomplete_results:false,items:[]},
-        this.showError=true;
-        this.searchText$ = new Subject<{search:string,pagenumber:number}>();
-        this.getSearch();
-      })
-  }
 
   sortList(sortParam){
     console.log("sort value"+sortParam);
+    this.currentFilter=sortParam;
     if(sortParam=='Name (A - Z)'){
       this.sortByName('asc');
     }
@@ -139,8 +146,5 @@ export class ViewUserComponent implements OnInit {
     }
     this.userList={...this.userList}
   }
-
-  
-
 
 }
