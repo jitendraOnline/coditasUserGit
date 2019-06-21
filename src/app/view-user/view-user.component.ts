@@ -70,19 +70,6 @@ export class ViewUserComponent implements OnInit {
      })
  }
 
-
-  search(searchedUser: string) {
-    this.showError=false;
-    this.showPagination=false;
-    searchedUser=searchedUser.trim();
-    console.log(this.seachedValue+"  "+searchedUser);
-      this.searchText$.next({
-        search: searchedUser,
-        pagenumber: 0,
-      });
-  }
-
-
   search(searchedUser: string) {
     this.showError=false;
     this.showPagination=false;
