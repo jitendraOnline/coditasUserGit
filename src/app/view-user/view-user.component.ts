@@ -31,17 +31,27 @@ export class ViewUserComponent implements OnInit {
 
   getSearch(){
     this.searchText$.pipe(
+
        debounceTime(400),
+
        distinctUntilChanged((prev, curr) => {
-         if(prev.search == curr.search){this.showPagination=true}
-         return prev.search == curr.search}),
+         if(prev.search == curr.search)
+         {
+          this.showPagination=true ;
+          if(curr.pagenumber!=0){
+            return false;
+          }
+        }
+        return prev.search == curr.search }),
+
        switchMap((searchedUser) =>{
            this.isloading=true;
-             return this.userService.searchUsers(searchedUser.search,searchedUser.pagenumber)
+           this.seachedValue=searchedUser.search;
+           return this.userService.searchUsers(searchedUser.search,searchedUser.pagenumber)
        }  
      )
-     )
-     .subscribe((serachResult:searchResult)=>{
+
+     ).subscribe((serachResult:searchResult)=>{
        this.userList=serachResult;
        if(this.currentFilter!=''){
          this.sortList(this.currentFilter);
@@ -59,6 +69,18 @@ export class ViewUserComponent implements OnInit {
        this.getSearch();
      })
  }
+
+
+  search(searchedUser: string) {
+    this.showError=false;
+    this.showPagination=false;
+    searchedUser=searchedUser.trim();
+    console.log(this.seachedValue+"  "+searchedUser);
+      this.searchText$.next({
+        search: searchedUser,
+        pagenumber: 0,
+      });
+  }
 
 
   search(searchedUser: string) {
